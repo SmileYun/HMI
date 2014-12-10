@@ -9,7 +9,7 @@ public class CanMsgInfo {
 	
 	private byte[] mData; // 8
 	
-	public static enum DISPLAYTYPE{BITMAP, SURFACEVIEW, UNKNOW}
+	public enum DISPLAYTYPE{BITMAP, SURFACEVIEW, UNKNOW}
 	
 	
 	
@@ -49,6 +49,26 @@ public class CanMsgInfo {
 	 */
 	public DISPLAYTYPE getType(){
 		DISPLAYTYPE _type = DISPLAYTYPE.UNKNOW;
+		switch (((mData[2] & 0xfc) >> 2)){
+		case 0x00:
+		case 0x01:
+		case 0x02:
+		case 0x03:
+		case 0x05:
+		case 0x06:
+			_type=DISPLAYTYPE.BITMAP;
+			break;
+		case 0x04:
+		case 0x07:
+		case 0x08:
+		case 0x09:
+		case 0x0a:
+		case 0x0b:
+		case 0x0c:
+			_type=DISPLAYTYPE.SURFACEVIEW;
+			break;
+		}
+		
 		return _type;
 	}
 	
