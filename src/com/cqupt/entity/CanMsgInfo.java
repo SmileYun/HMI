@@ -9,7 +9,7 @@ public class CanMsgInfo {
 	
 	private byte[] mData; // 8
 	
-	public enum DISPLAYTYPE{BITMAP, SURFACEVIEW, UNKNOW}
+	public static enum DISPLAYTYPE{BITMAP, SURFACEVIEW, UNKNOW}
 	
 	
 	

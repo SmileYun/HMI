@@ -1,6 +1,8 @@
 package com.cqupt.model.threaten;
 
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Message;
 
 import com.cqupt.entity.CanMsgInfo;
 import com.cqupt.entity.CanMsgInfo.DISPLAYTYPE;
@@ -18,7 +20,11 @@ public class BMHandler extends Dispatcher.AbHandler {
 
 	@Override
 	public Bundle response(CanMsgInfo info) {
-		return null;
+		Bundle bd = new Bundle();
+		byte[] b = info.getData(); 
+		int time , imdrid,im2;
+		bd.putInt("level", this.LEVEL.ordinal());
+		return bd;
 	}
 
 }
