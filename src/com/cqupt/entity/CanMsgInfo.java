@@ -49,7 +49,6 @@ public class CanMsgInfo {
 	 */
 	public DISPLAYTYPE getType(){
 		DISPLAYTYPE _type = DISPLAYTYPE.UNKNOW;
-		
 		return _type;
 	}
 	

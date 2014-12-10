@@ -167,7 +167,6 @@ public class MainActivity extends HMIActivity implements Callback {
 //				// TODO 此处程序后面要改为150
 //				mToneGenerator = new ToneGenerator(RVoiceId, 150);
 //			}
-//
 //			if (mTimer != null) {
 //				mTimer.cancel();
 //				mTimer = null;
@@ -198,6 +197,7 @@ public class MainActivity extends HMIActivity implements Callback {
 		case TYPE_SURFACE:
 
 			break;
+			
 		default:
 			break;
 		}
