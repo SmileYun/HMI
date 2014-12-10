@@ -1,7 +1,8 @@
 package com.cqupt.model;
 
 
-import com.cqupt.model.CanMsgCache.Segment.LEVEL;
+
+import com.cqupt.model.threaten.CanMsgCache;
 
 import android.bluetooth.BluetoothSocket;
 

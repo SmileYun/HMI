@@ -1,8 +1,6 @@
 package com.cqupt.entity;
 
-import com.cqupt.model.threaten.BMHandler;
 
-import android.R.integer;
 
 public class CanMsgInfo {
 	private byte[] id; // 2
