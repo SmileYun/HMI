@@ -26,5 +26,4 @@ public class BMHandler extends Dispatcher.AbHandler {
 		bd.putInt("level", this.LEVEL.ordinal());
 		return bd;
 	}
-
 }
