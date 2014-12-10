@@ -53,6 +53,7 @@ public class RecvThread {
 					if(mHandler != null){
 						CanMsgCache.Segment _s = mHandler.handlerRawCanMsg(mCanMsgCharBuffer);
 						mCanMsgCache.update(_s);
+						mHandler.handlerMsg(_s);
 					}
 				}
 			} catch (Exception e) {
@@ -63,6 +64,7 @@ public class RecvThread {
 	
 	public interface RawCanMsgHandler{
 		CanMsgCache.Segment handlerRawCanMsg(char[] mCanMsgCharBuffer);
+		void handlerMsg(CanMsgCache.Segment sg);
 	}
 
 	public void setHandler(RawCanMsgHandler handler) {

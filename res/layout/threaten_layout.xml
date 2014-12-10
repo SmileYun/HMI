@@ -3,28 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >  
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:id="@+id/btState_layout"
-         >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="蓝牙连接状态："
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/btconn_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="未连接"
-            android:textSize="15sp" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,12 +27,12 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:scaleType="fitXY" />
-             <com.example.myblue_new.MySurfaceView 
+            <!--  <com.example.myblue_new.MySurfaceView 
 			    android:layout_width="fill_parent"
 			    android:layout_height="fill_parent"
 			    android:layout_gravity="center"
 			    android:id="@+id/surface" 
-			    android:visibility="gone"/>
+			    android:visibility="gone"/> -->
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
