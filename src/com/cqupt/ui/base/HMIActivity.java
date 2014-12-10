@@ -18,8 +18,10 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.cqupt.core.ioc.CCIoCEventListener;
 import com.cqupt.core.ioc.CCIoCView;
 import com.cqupt.hmi.R;
+import com.cqupt.persenter.Dispatcher;
 
 public abstract class HMIActivity extends FragmentActivity implements IUI {
+	protected String TAG = "HMIActivity";
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected float mScreenDensity;
@@ -36,6 +38,23 @@ public abstract class HMIActivity extends FragmentActivity implements IUI {
 		setContentView(R.layout.activity_main);
 		getScreenDisplay();
 		iocInit();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(this instanceof IUI){
+			Dispatcher.getInstance().setIUI(this);
+//			System.out.println("----r--->" + TAG +"setIUI");
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(this instanceof IUI){
+//			Dispatcher.getInstance().setIUI(null);
+		}
 	}
 
 	@SuppressWarnings("deprecation")

@@ -1,5 +1,7 @@
 package com.cqupt.core.util;
 
+import com.cqupt.model.threaten.CanMsgCache.Segment;
+
 public class util {
 	/**
 	 * Convert byte[] to hex
@@ -60,4 +62,5 @@ public class util {
 		return (byte) "0123456789abcdef".indexOf(c);
 		// return (byte) "0123456789ABCDEF".indexOf(c);
 	}
+	
 }

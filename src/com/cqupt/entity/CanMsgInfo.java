@@ -1,47 +1,76 @@
 package com.cqupt.entity;
 
-import com.cqupt.model.threaten.BMHandler;
+import com.cqupt.model.threaten.CanMsgCache.Segment;
 
-import android.R.integer;
+
 
 public class CanMsgInfo {
-	private byte[] id; // 2
-	private byte[] data; // 8
+	private byte[] mCanID; // 2
+	
+	private byte[] mData; // 8
+	
+	public enum DISPLAYTYPE{BITMAP, SURFACEVIEW, UNKNOW}
+	
+	
+	
 
-	public CanMsgInfo() {
+	public CanMsgInfo(Segment info) {
+		mCanID = info.getCanID();
+		mData = info.getData();
 	}
 
 	public CanMsgInfo(byte[] id, byte[] data) {
 		super();
-		this.id = id;
-		this.data = data;
+		this.mCanID = id;
+		this.mData = data;
 	}
 
 	public byte[] getId() {
-		return id;
+		return mCanID;
 	}
 
 	public void setId(byte[] id) {
-		this.id = id;
+		this.mCanID = id;
 	}
 
 	public byte[] getData() {
-		return data;
+		return mData;
 	}
 
 	public void setData(byte[] data) {
-		this.data = data;
+		this.mData = data;
 	}
 	
 	/**
 	 * 
 	 * 返回处理类型   BMHandler.LEVEL SVHandler.LEVEL
 	 * @return
-	 * int    返回类型
+	 * DISPLAYTYPE    返回类型
 	 */
-	public int getType(){
-		int _return = 0;
+	public DISPLAYTYPE getType(){
+		DISPLAYTYPE _type = DISPLAYTYPE.UNKNOW;
+		switch (((mData[2] & 0xfc) >> 2)){
+		case 0x00:
+		case 0x01:
+		case 0x02:
+		case 0x03:
+		case 0x05:
+		case 0x06:
+			_type=DISPLAYTYPE.BITMAP;
+			break;
+		case 0x04:
+		case 0x07:
+		case 0x08:
+		case 0x09:
+		case 0x0a:
+		case 0x0b:
+		case 0x0c:
+			_type=DISPLAYTYPE.SURFACEVIEW;
+			break;
+		}
 		
-		return _return;
+		return _type;
 	}
+	
+	
 }

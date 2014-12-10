@@ -5,17 +5,24 @@ import java.util.UUID;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.cqupt.entity.CanMsgInfo;
+import com.cqupt.entity.CanMsgInfo.DISPLAYTYPE;
 import com.cqupt.model.RecvThread;
+import com.cqupt.model.RecvThread.RawCanMsgHandler;
 import com.cqupt.model.threaten.BMHandler;
+import com.cqupt.model.threaten.CanMsgCache.Segment;
 import com.cqupt.model.threaten.SVHandler;
 import com.cqupt.ui.base.IUI;
 
-public class Dispatcher {
+public class Dispatcher implements RawCanMsgHandler{
 	private static String TAG = "Dispatcher";
+	
+	private static Dispatcher mInstanceDispatcher;
 	
 	private IUI mContentView;
 	
@@ -25,9 +32,35 @@ public class Dispatcher {
 	
 	private BluetoothSocket mBluetoothSocket;
 	
+	private HandlerThread mHandler;
 	
-	public Dispatcher(IUI contentView){
-		mContentView = contentView;
+	
+	private Dispatcher(){}
+	
+	private Dispatcher(IUI contentView){
+		initResponseChain();
+		mHandler = new HandlerThread(TAG);
+	}
+	
+	public static Dispatcher getInstance(){
+		if (mInstanceDispatcher == null) {
+			synchronized (Dispatcher.class) {
+				if(mInstanceDispatcher == null)
+					mInstanceDispatcher = new Dispatcher();
+			}
+		}
+		return mInstanceDispatcher;
+	}
+	
+	public void setIUI(IUI ui){
+		this.mContentView = ui;
+	}
+
+	/**
+	 * 
+	 * 初始化责任链
+	 */
+	private void initResponseChain() {
 		mBMAbHandler = new BMHandler();
 		mSVHandler = new SVHandler();
 		mBMAbHandler.setNext(mSVHandler);
@@ -36,17 +69,15 @@ public class Dispatcher {
 	public void connectBTandRecv(BluetoothDevice device){
 		try {
 			mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-			// 连接
 			mBluetoothSocket.connect();
 			
-			new RecvThread(mBluetoothSocket).start();
-
 			if (mBluetoothSocket != null) {
-//				Toast.makeText(MainActivity.this, "成功连接！", Toast.LENGTH_SHORT).show();
+				mRecvThread = new RecvThread(mBluetoothSocket);
+				mRecvThread.start();
 			}
 
 		} catch (IOException e) {
-//			Toast.makeText(MainActivity.this, "连接失败！", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
 	}
 	
@@ -54,29 +85,48 @@ public class Dispatcher {
 		void excute();
 	}
 	
+	public void postCommand(Runnable command){
+		
+	}
+	
 	public static abstract class AbHandler {
-		private int level = 0;
+		private DISPLAYTYPE level = DISPLAYTYPE.UNKNOW;
 
-		private AbHandler handler;
+		private AbHandler nextHandler;
 
-		public AbHandler(int _level) {
+		public AbHandler(){}
+		
+		public AbHandler(DISPLAYTYPE _level) {
 			this.level = _level;
 		}
 
 		public void setNext(AbHandler h) {
-			handler = h;
+			nextHandler = h;
 		}
 
-		public final void handleMessage(CanMsgInfo info) {
+		public final Bundle handleMessage(CanMsgInfo info) {
 			if (info.getType() == this.level) {
-				this.response(info);
-			} else if (this.handler != null) {
-				this.handler.handleMessage(info);
+				return this.response(info);
+			} else if (this.nextHandler != null) {
+				return this.nextHandler.handleMessage(info);
 			} else {
 				Log.e(TAG, " CanMsgInfo can't be handled !");
+				return null;
 			}
 		}
 
-		public abstract void response(CanMsgInfo info);
+		public abstract Bundle response(CanMsgInfo info);
+	}
+
+	@Override
+	public Segment handlerRawCanMsg(char[] mCanMsgCharBuffer) {
+		return null;
+	}
+
+	@Override
+	public void handlerMsg(Segment sg) {
+		CanMsgInfo info = null;
+		Bundle _b = mBMAbHandler.handleMessage(info);
+		mContentView.show(_b);
 	}
 }

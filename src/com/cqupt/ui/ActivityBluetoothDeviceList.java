@@ -2,7 +2,9 @@ package com.cqupt.ui;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +22,7 @@ import com.cqupt.persenter.adapter.BluetoothAdapter;
 import com.cqupt.ui.base.HMIActivity;
 
 public class ActivityBluetoothDeviceList extends HMIActivity {
+	protected String TAG = "ActivityBluetoothDeviceList";
 	private BluetoothConn mBluetoothConn;
 	
 	@CCIoCView(id = R.id.bluet_device_list, itemClick = "itemClik")
@@ -71,6 +74,18 @@ public class ActivityBluetoothDeviceList extends HMIActivity {
 	}
 	
 	protected void itemClik(AdapterView<?> parent, View view, int position, long id){
-		
+		Intent data = new Intent();
+		data.putExtra("postion", position);
+		data.putExtra(BluetoothDevice.EXTRA_DEVICE, mBluetoothConn.getmBluetoothDeviceList().get(position));
+		setResult(Activity.RESULT_OK, data);
+		finish();
+	}
+
+	@Override
+	public void show(Bundle b) {
+	}
+
+	@Override
+	public void stop() {
 	}
 }
