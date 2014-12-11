@@ -190,7 +190,7 @@ public class CanMsgCache {
 		
 		private LEVEL level = LEVEL.SAFE;
 		
-		private byte[] canID = null;
+		private int canID = 0;
 		
 		private byte[] data = null;
 	
@@ -203,11 +203,11 @@ public class CanMsgCache {
 			}
 		}
 
-		public byte[] getCanID() {
+		public int getCanID() {
 			return canID;
 		}
 
-		public void setCanID(byte[] canID) {
+		public void setCanID(int canID) {
 			this.canID = canID;
 		}
 

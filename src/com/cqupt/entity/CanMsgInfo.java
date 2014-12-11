@@ -5,7 +5,7 @@ import com.cqupt.model.threaten.CanMsgCache.Segment;
 
 
 public class CanMsgInfo {
-	private byte[] mCanID; // 2
+	private int mCanID; // 2
 	
 	private byte[] mData; // 8
 	
@@ -19,17 +19,17 @@ public class CanMsgInfo {
 		mData = info.getData();
 	}
 
-	public CanMsgInfo(byte[] id, byte[] data) {
+	public CanMsgInfo(int id, byte[] data) {
 		super();
 		this.mCanID = id;
 		this.mData = data;
 	}
 
-	public byte[] getId() {
+	public int getId() {
 		return mCanID;
 	}
 
-	public void setId(byte[] id) {
+	public void setId(int id) {
 		this.mCanID = id;
 	}
 

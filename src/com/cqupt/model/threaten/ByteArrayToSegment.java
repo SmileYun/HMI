@@ -1,10 +1,8 @@
 package com.cqupt.model.threaten;
 
-import android.util.Xml.Encoding;
-
-import com.cqupt.model.CanMsgCache.Segment;
-import com.cqupt.model.CanMsgCache.Segment.LEVEL;
 import com.cqupt.model.RecvThread.RawCanMsgHandler;
+import com.cqupt.model.threaten.CanMsgCache.Segment;
+import com.cqupt.model.threaten.CanMsgCache.Segment.LEVEL;
 
 public class ByteArrayToSegment implements RawCanMsgHandler {
 
@@ -78,6 +76,11 @@ public class ByteArrayToSegment implements RawCanMsgHandler {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public void handlerMsg(Segment sg) {
+
 	}
 
 }

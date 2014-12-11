@@ -1,17 +1,12 @@
 package com.cqupt.model.threaten;
 
-import android.R.integer;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Message;
 
 import com.cqupt.entity.CanMsgInfo;
 import com.cqupt.entity.CanMsgInfo.DISPLAYTYPE;
-import com.cqupt.model.RecvThread.RawCanMsgHandler;
-import com.cqupt.model.threaten.CanMsgCache.Segment;
+import com.cqupt.hmi.R;
 import com.cqupt.persenter.Dispatcher;
-import com.example.myblue_new.MainActivity;
-import com.example.myblue_new.R;
 
 public class BMHandler extends Dispatcher.AbHandler {
 
@@ -26,12 +21,13 @@ public class BMHandler extends Dispatcher.AbHandler {
 	private static final int AUDIO = AudioManager.STREAM_ALARM;
 
 	@Override
-	public Bundle response(CanMsgInfo info) {
+	public Bundle response(CanMsgInfo canInfo) {
 		Bundle bd = new Bundle();
-		int alaLevel = info[2] % 4;
-		int dir = (info[6] >> 6) & 0x03;
+		byte[] info = canInfo.getData();
+		int alaLevel = info[0] % 4;
+		int dir = (info[4] >> 6) & 0x03;
 
-		switch (((info[2] & 0xfc) >> 2)) {
+		switch (((info[0] & 0xfc) >> 2)) {
 		case 0x00: // rew
 			if (alaLevel == 0x01) {
 
