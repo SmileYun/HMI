@@ -27,12 +27,12 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:scaleType="fitXY" />
-            <!--  <com.example.myblue_new.MySurfaceView 
+        	<com.cqupt.ui.widget.DynamicView
 			    android:layout_width="fill_parent"
 			    android:layout_height="fill_parent"
 			    android:layout_gravity="center"
 			    android:id="@+id/surface" 
-			    android:visibility="gone"/> -->
+			    android:visibility="gone"/> 
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

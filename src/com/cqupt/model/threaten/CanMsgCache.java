@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import android.R.integer;
 
 import com.cqupt.core.ioc.CCAppException;
+import com.cqupt.model.threaten.CanMsgCache.Segment.LEVEL;
 
 public class CanMsgCache {
 	private ConcurrentHashMap<Integer, HashMap<String, Object>> mCache;
@@ -162,7 +163,52 @@ public class CanMsgCache {
 			HashMap<String, Object> m = _Cache.get(i);
 
 			if ((Integer) m.get("flag") == 1) {
+				
 				return m;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * 返回优先级别最高场景
+	 * 
+	 * @return Segment, 如果不存在, 则返回null
+	 */
+	public Segment queryHighLevelReturnSg() {
+		ConcurrentHashMap<Integer, HashMap<String, Object>> _Cache;
+		Segment _s = new Segment();
+		
+		lock.readLock().lock();
+		try {
+			_Cache = new ConcurrentHashMap<Integer, HashMap<String, Object>>(mCache);
+		} finally {
+			lock.readLock().unlock();
+		}
+		
+		for (int i = 1; i <= maxID; i++) {
+			HashMap<String, Object> m = _Cache.get(i);
+			LEVEL l = LEVEL.SAFE;
+			if ((Integer) m.get("flag") == 1) {
+				switch (i) {
+				case 1:
+					l = LEVEL.HIGH;
+					break;
+				case 2:
+					l = LEVEL.MIDDLE;
+					break;
+				case 3:
+					l = LEVEL.LOW;
+					break;
+				case 4:
+					l = LEVEL.SAFE;
+					break;
+				}
+				_s.setLevel(l);
+				_s.setCanID((Integer) m.get("canID"));
+				_s.setData((byte[]) m.get("data"));
+				return _s;
 			}
 		}
 		return null;
@@ -186,6 +232,16 @@ public class CanMsgCache {
 		}
 	}
 	
+	/*
+	 * 
+	 * 		    +--------------------------+
+	 * Segment	| id | canId | data | flag |
+	 * 		    |--------------------------| 
+	 * 		    | id | HashMap<Str,Object> |
+	 * 			+--------------------------+
+	 * 
+	 * 
+	 */
 	public static final class Segment {
 		
 		private LEVEL level = LEVEL.SAFE;

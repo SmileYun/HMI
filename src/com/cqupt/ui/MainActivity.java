@@ -25,6 +25,7 @@ import com.cqupt.core.ioc.CCIoCView;
 import com.cqupt.hmi.R;
 import com.cqupt.persenter.Dispatcher;
 import com.cqupt.ui.base.HMIActivity;
+import com.cqupt.ui.widget.DynamicView;
 
 public class MainActivity extends HMIActivity implements Callback {
 	protected String TAG = "MainActivity";
@@ -43,7 +44,12 @@ public class MainActivity extends HMIActivity implements Callback {
 	@CCIoCView(id = R.id.img2)
 	private ImageView display_2;
 	
+	@CCIoCView(id = R.id.surface)
+	private DynamicView mDynamicView;
+	
 	private Handler mHandler;
+	
+	private ToneGenerator mToneGenerator;
 	
 	
 	
@@ -102,13 +108,6 @@ public class MainActivity extends HMIActivity implements Callback {
 	}	
 	
 	/**
-	 * 实现SetFonts接口
-	 */
-	public void setFontsIs(Typeface mTypeface){
-		mTypeface=Typeface.createFromAsset(getAssets(), "fonts/microyahei.ttf");
-	}
-	
-	/**
 	 * menu菜单   搜索蓝牙设备，建立连接
 	 */
 	@Override
@@ -139,8 +138,17 @@ public class MainActivity extends HMIActivity implements Callback {
 		RidImg_2 = b.getInt(""); 
 		time = b.getInt("");
 		
-		
-		displayImg(RidImg_1, RidImg_2, VOICE_LEVEL, time);
+		if (b.getInt("bitmap_or_surfaceview") == 1) {
+			mDynamicView.setVisibility(View.GONE);
+			display_1.setVisibility(View.VISIBLE);
+			display_2.setVisibility(View.VISIBLE);
+			displayImg(RidImg_1, RidImg_2, VOICE_LEVEL, time);
+		}else {
+			mDynamicView.setVisibility(View.VISIBLE);
+			display_1.setVisibility(View.GONE);
+			display_2.setVisibility(View.GONE);	
+			mDynamicView.updateSV(b);
+		}
 	}
 	
 	/**
@@ -154,30 +162,26 @@ public class MainActivity extends HMIActivity implements Callback {
 	 *            1/频率
 	 */
 	private void displayImg(int RImgID_1, int RImgID_2, int RVoiceId, int time) {
-//		if (recv_flag) {
-//			recv_flag = false;
-//
-//			display1.setImageBitmap(BitmapFactory.decodeResource(getResources(), RImgID_1)); // 后面一张不动的图片
-//			display1.setVisibility(View.GONE);
-//			display2.setImageBitmap(BitmapFactory.decodeResource(getResources(), RImgID_2)); // 闪烁的图片
-//			display2.setVisibility(View.GONE);
-//			btState_layout.setVisibility(View.GONE);
-//
-//			if (mToneGenerator == null) {
-//				// TODO 此处程序后面要改为150
-//				mToneGenerator = new ToneGenerator(RVoiceId, 150);
-//			}
-//
-//			if (mTimer != null) {
-//				mTimer.cancel();
-//				mTimer = null;
-//			}
-//
-//			tHandler.obtainMessage().sendToTarget();
-//			mTimer = new Timer();
+			display_1.setImageBitmap(BitmapFactory.decodeResource(getResources(), RImgID_1)); // 后面一张不动的图片
+			display_1.setVisibility(View.GONE);
+			display_2.setImageBitmap(BitmapFactory.decodeResource(getResources(), RImgID_2)); // 闪烁的图片
+			display_2.setVisibility(View.GONE);
+
+			if (mToneGenerator == null) {
+				mToneGenerator = new ToneGenerator(RVoiceId, VOICE_LEVEL);
+			}
+
+			if (mTimer != null) {
+				mTimer.cancel();
+				mTimer = null;
+			}
+			mHandler.obtainMessage().sendToTarget();
+			mTimer = new Timer();
 //			mTimer.schedule(new myTask(time), time, time);
-//		}
 	}
+	
+	private Timer mTimer;
+	
 	
 	@Override
 	public void stop() {
