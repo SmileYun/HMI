@@ -22,9 +22,10 @@ import com.cqupt.persenter.Dispatcher;
 
 public abstract class HMIActivity extends FragmentActivity implements IUI {
 	protected String TAG = "HMIActivity";
-	protected int mScreenWidth;
-	protected int mScreenHeight;
+	public int mScreenWidth;
+	public int mScreenHeight;
 	protected float mScreenDensity;
+	protected DisplayMetrics mDisplayMetrics;
 	@CCIoCView(id = R.id.main_content_linearlayout)
 	private RelativeLayout mainLayout;
 
@@ -62,9 +63,9 @@ public abstract class HMIActivity extends FragmentActivity implements IUI {
 		Display _d = getWindowManager().getDefaultDisplay();
 		mScreenHeight = _d.getHeight();
 		mScreenWidth = _d.getWidth();
-		DisplayMetrics _dm = new DisplayMetrics();
-		_d.getMetrics(_dm);
-		mScreenDensity = _dm.density;
+		mDisplayMetrics = new DisplayMetrics();
+		_d.getMetrics(mDisplayMetrics);
+		mScreenDensity = mDisplayMetrics.density;
 	}
 
 	protected final void iocInit() {
