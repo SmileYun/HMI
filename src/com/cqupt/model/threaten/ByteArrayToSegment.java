@@ -77,10 +77,5 @@ public class ByteArrayToSegment implements RawCanMsgHandler {
 			return false;
 		}
 	}
-
-	@Override
-	public void handlerMsg(Segment sg) {
-
-	}
-
+	
 }

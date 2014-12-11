@@ -14,7 +14,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -22,8 +25,10 @@ import android.view.SurfaceView;
 import com.cqupt.ui.base.HMIActivity;
 
 public class DynamicView extends SurfaceView implements Callback {
+	private final String TAG = "DynamicView";
+	
 	private Bundle info;
-
+	
 	private SurfaceHolder mHolder;
 
 	private int nowBitmapResID = -1;
@@ -51,6 +56,14 @@ public class DynamicView extends SurfaceView implements Callback {
 		this(context, attrs, 0);
 	}
 
+	private Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			if (msg.what == 0x52551314) {
+				drawDynamicView(mHolder.lockCanvas(), info);
+			}
+		};
+	};
+	
 	public DynamicView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		mContext = context;
@@ -124,18 +137,7 @@ public class DynamicView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		switch (info.getInt("type")) {
-		case 1:
-			drawDynamicView(mHolder.lockCanvas(), info);
-			break;
-
-		case 2:
-
-			break;
-
-		default:
-			break;
-		}
+		Log.i(TAG, "-- surfaceView has been created! ");
 	}
 
 	@Override
@@ -144,6 +146,7 @@ public class DynamicView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		mHandler = null;
 	}
 	
 	private Bitmap loadOptiBitmap(int resId) {
@@ -165,6 +168,10 @@ public class DynamicView extends SurfaceView implements Callback {
 	
 	public void updateSV(Bundle info){
 		this.info = info;
+		Message msg = mHandler.obtainMessage();
+//		msg.setData(info);
+		msg.what = 0x52551314;
+		msg.sendToTarget();
 	}
 
 }

@@ -2,7 +2,10 @@ package com.cqupt.model;
 
 
 
+import java.util.HashMap;
+
 import com.cqupt.model.threaten.CanMsgCache;
+import com.cqupt.model.threaten.CanMsgCache.Segment;
 
 import android.bluetooth.BluetoothSocket;
 
@@ -17,6 +20,8 @@ public class RecvThread {
 	private CanMsgCache mCanMsgCache = CanMsgCache.getCacheInstance();
 	
 	private RawCanMsgHandler mHandler = null;
+	
+	private SegmentMsgHandler mSenter = null;
 	
 
 	public RecvThread(BluetoothSocket mBluetoothSocket) {
@@ -52,8 +57,10 @@ public class RecvThread {
 					looper_recv = 10;
 					if(mHandler != null){
 						CanMsgCache.Segment _s = mHandler.handlerRawCanMsg(mCanMsgCharBuffer);
+						//存
 						mCanMsgCache.update(_s);
-						mHandler.handlerMsg(_s);
+						//通知
+						mSenter.handlerMsg(_s);
 					}
 				}
 			} catch (Exception e) {
@@ -62,13 +69,41 @@ public class RecvThread {
 		}
 	};
 	
+	public HashMap<String, Object> queryHighLevel(){
+		HashMap<String, Object> _m;
+		_m = mCanMsgCache.queryHighLevel();
+		return _m;
+	}
+	
+	public Segment queryHighLevelReturnSg(){
+		Segment _s;
+		_s = mCanMsgCache.queryHighLevelReturnSg();
+		return _s;
+	}
+	
+	/**
+	 * 
+	 * @Description   处理原始信息以存入缓存
+	 */
 	public interface RawCanMsgHandler{
 		CanMsgCache.Segment handlerRawCanMsg(char[] mCanMsgCharBuffer);
+	}
+	
+	/**
+	 * 
+	 * @Description   接到信息后通知
+	 */
+	public interface SegmentMsgHandler{
 		void handlerMsg(CanMsgCache.Segment sg);
 	}
 
+	
 	public void setHandler(RawCanMsgHandler handler) {
 		this.mHandler = handler;
+	}
+	
+	public void setHandler(SegmentMsgHandler handler) {
+		this.mSenter = handler;
 	}
 	
 }
